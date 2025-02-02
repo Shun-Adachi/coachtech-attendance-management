@@ -8,7 +8,7 @@
 @section('content')
 <div class="auth-form">
   <h2 class="auth-form__heading">管理者ログイン</h2>
-  <form class="auth-form__form" action="/login" method="post" novalidate>
+  <form class="auth-form__form" action="/admin/login" method="post" novalidate>
     @csrf
     <div class="auth-form__group">
       <label class="auth-form__label" for="email">メールアドレス</label>

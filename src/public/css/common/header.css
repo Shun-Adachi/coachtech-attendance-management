@@ -38,7 +38,7 @@ input[type="submit"] {
 .header-link {
   display: flex;
   justify-content: space-between;
-  max-width: 450px;
+  max-width: 600px;
   margin-right: 10px;
   text-align: center;
   font-weight: bold;

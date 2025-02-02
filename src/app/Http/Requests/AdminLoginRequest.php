@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 use App\Models\User;
 
-class UserLoginRequest extends FormRequest
+class AdminLoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -46,8 +46,8 @@ class UserLoginRequest extends FormRequest
                 return;
             }
 
-            // 一般ユーザー以外
-            if ($user->role_id !== config('constants.ROLE_USER')) {
+            // 管理者以外
+            if ($user->role_id !== config('constants.ROLE_ADMIN')) {
                 $validator->errors()->add('email', 'ログイン情報が登録されていません');
             }
         });

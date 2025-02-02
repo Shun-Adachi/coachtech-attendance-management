@@ -6,14 +6,31 @@
 @endsection
 
 @section('content')
-<form class="form" action="/attendance/clock_in" method="post" novalidate>
+<form class="form" action="/attendance" method="post" novalidate>
   @csrf
+  @if($attendance->status_id===config('constants.STATUS_ATTENDANCE'))
   <p class="form__text">勤務外</p>
+  @elseif($attendance->status_id===config('constants.STATUS_WORKING'))
+  <p class="form__text">出勤中</p>
+  @elseif($attendance->status_id===config('constants.STATUS_BREAK'))
+  <p class="form__text">休憩中</p>
+  @else
+  <p class="form__text">退勤済</p>
+  @endif
+
   <input class="form__input--date" type="text" name="current_date" id="currentDate" readonly>
   <input class="form__input--time" type="text" name="current_time" id="currentTime" readonly>
   <div class="form__group">
-    <input class="form__button--clock-in" type="submit" value="出勤">
-    <input class="form__button--break-in" type="submit" value="休憩入">
+    @if($attendance->status_id===config('constants.STATUS_ATTENDANCE'))
+    <input class="form__button--clock-in" type="submit" value="出勤" formaction="/attendance">
+    @elseif($attendance->status_id===config('constants.STATUS_WORKING'))
+    <input class="form__button--clock-out" type="submit" value="退勤" formaction="/attendance">
+    <input class="form__button--break" type="submit" value="休憩" formaction="/attendance/break">
+    @elseif($attendance->status_id===config('constants.STATUS_BREAK'))
+    <input class="form__button--break" type="submit" value="休憩戻" formaction="/attendance/break">
+    @else
+    <p class="form__text--thanks">お疲れさまでした。<div class=""></div></p>
+    @endif
   </div>
 </form>
 

@@ -21,7 +21,7 @@
     </div>
     <div class="auth-form__group">
       <label class="auth-form__label" for="email">メールアドレス</label>
-      <input class="auth-form__input" type="email" name="email" id="email" value="{{ old('email') }}">
+      <input class="auth-form__input" type="text" name="email" id="email" value="{{ old('email') }}">
       <p class="auth-form__error-message">
         @error('email')
         {{ $message }}
@@ -33,7 +33,9 @@
       <input class="auth-form__input" type="password" name="password" id="password">
       <p class="auth-form__error-message">
         @error('password')
+        @if ($message !== 'パスワードと一致しません')
         {{ $message }}
+         @endif
         @enderror
       </p>
     </div>
@@ -41,6 +43,11 @@
       <label class="auth-form__label" for="password_confirmation">確認用パスワード</label>
       <input class="auth-form__input" type="password" name="password_confirmation" id="password_confirmation">
       <p class="auth-form__error-message">
+        @error('password')
+        @if ($message === 'パスワードと一致しません')
+        {{ $message }}
+         @endif
+        @enderror
       </p>
     </div>
     <div class="auth-form__group">

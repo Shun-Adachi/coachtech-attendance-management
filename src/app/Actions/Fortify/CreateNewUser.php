@@ -3,14 +3,15 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
+
+    const DEFAULT_PAYMENT_METHOD_ID = 1;
 
     /**
      * Validate and create a newly registered user.
@@ -19,22 +20,16 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique(User::class),
-            ],
-            'password' => $this->passwordRules(),
-        ])->validate();
+        // リクエストクラスをインスタンス化してバリデーションを実行
+        $request = app(RegisterRequest::class);
+        $request->merge($input);
+        $request->validateResolved();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'role_id' => config('constants.ROLE_USER'),
         ]);
     }
 }

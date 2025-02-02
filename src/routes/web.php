@@ -6,7 +6,6 @@ use App\Http\Controllers\CustomAuthenticatedSessionController;
 use App\Http\Controllers\AdminAttendanceController;
 use App\Http\Controllers\UserAttendanceController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,7 +21,7 @@ use App\Http\Controllers\UserAttendanceController;
 Route::pattern('user_id', '[0-9]+');
 Route::pattern('attendance_id', '[0-9]+');
 
-//Fortify カスタマイズログイン
+// Fortify カスタマイズログイン
 Route::get('/login', [CustomAuthenticatedSessionController::class, 'showUserLogin'])->middleware('guest')->name('login');
 Route::post('/login', [CustomAuthenticatedSessionController::class, 'storeUser']);
 Route::get('/admin/login', [CustomAuthenticatedSessionController::class, 'showAdminLogin'])->middleware('guest')->name('admin.login');
@@ -30,22 +29,25 @@ Route::post('/admin/login', [CustomAuthenticatedSessionController::class, 'store
 Route::get('/verify-login', [CustomAuthenticatedSessionController::class, 'verifyLogin']);
 
 Route::middleware('auth')->group(function () {
+    // ログアウト
     Route::get('/logout', [CustomAuthenticatedSessionController::class, 'logout'])->name('logout');
 
     // 管理者専用ルート
-    Route::middleware('role:1')->group(function () {
+    Route::middleware('role:' . config('constants.ROLE_ADMIN'))->group(function () {
         Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])->name('admin.attendance.list');
         Route::get('/attendance/{attendance_id}', [AdminAttendanceController::class, 'showAttendance'])->name('attendance');
         Route::get('/admin/staff/list', [AdminAttendanceController::class, 'showStaffIndex'])->name('admin.staff.list');
-        Route::get('/admin/attemdamce/staff/{user_id}', [AdminAttendanceController::class, 'showStaffAttendance'])->name('admin.attendance.staff');
+        Route::get('/admin/attendance/staff/{user_id}', [AdminAttendanceController::class, 'showStaffAttendance'])->name('admin.attendance.staff');
         Route::get('/stamp_correction_request/list', [AdminAttendanceController::class, 'showRequests'])->name('stamp_correction_request.list');
         Route::get('/stamp_correction_request/approve/{attendance_id}', [AdminAttendanceController::class, 'approve'])->name('stamp_correction_request.approve');
     });
 
     // 一般ユーザー専用ルート
-    Route::middleware('role:2')->group(function () {
+    Route::middleware('role:' . config('constants.ROLE_USER'))->group(function () {
         Route::get('/attendance', [UserAttendanceController::class, 'create'])->name('attendance');
-        Route::get('/attendance/list', [UserAttendanceController::class, 'index'])->name('attendance.list');
+        Route::post('/attendance', [UserAttendanceController::class, 'updateAttendance'])->name('attendance');
+        Route::post('/attendance/break', [UserAttendanceController::class, 'storeBreak'])->name('attendance');
+        Route::get('/attendance/list/{year?}/{month?}', [UserAttendanceController::class, 'index'])->name('attendance.list');
         Route::get('/attendance/{attendance_id}', [UserAttendanceController::class, 'show'])->name('attendance.show');
         Route::get('/stamp_correction_request/list', [UserAttendanceController::class, 'showRequests'])->name('stamp_correction_request.list');
     });

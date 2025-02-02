@@ -44,7 +44,7 @@ class FortifyServiceProvider extends ServiceProvider
             return new class implements \Laravel\Fortify\Contracts\LoginResponse {
                 public function toResponse($request)
                 {
-                    $user = Auth::user(); // ログインしたユーザー情報を取得
+                    $user = Auth::user();
 
                     if ($user->role_id === 1) {
                         // 管理者の場合のリダイレクト先

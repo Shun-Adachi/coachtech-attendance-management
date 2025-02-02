@@ -40,7 +40,5 @@
       </tr>
       @endforeach
     </tbody>
-
-
 </div>
 @endsection('content')
