@@ -1,95 +1,161 @@
 .attendance__content {
-  width: 95%;
-  max-width: 900px;
-  margin: 40px auto;
+    width: 95%;
+    max-width: 900px;
+    margin: 40px auto;
 }
 
 .attendance__header {
-  margin-bottom: 60px;
-  padding-left: 20px;
-  border-left: 8px solid #000000;
+    margin-bottom: 60px;
+    padding-left: 20px;
+    border-left: 8px solid #000000;
 }
 
-.detail-form__form {}
+.detail-form__form {
+}
 
 .detail-table {
-  width: 100%;
-  margin: auto;
-  border-radius: 10px;
-  background-color: #ffffff;
+    width: 100%;
+    margin: auto;
+    border-radius: 10px;
+    background-color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
 }
 
 .detail-table tr {
-  height: 80px;
+    height: 80px;
 }
 
 .detail-table th {
-  width: 40%;
-  height: 100%;
-  min-width: 150px;
-  max-width: 400px;
-  padding: 0px 0px 0px 5%;
-  color: #808080;
-  border-bottom: 3px solid #f0f0f0;
-  text-align: left;
-  font-weight: bold;
+    width: 40%;
+    height: 100%;
+    min-width: 150px;
+    max-width: 400px;
+    padding: 0px 0px 0px 5%;
+    color: #808080;
+    border-bottom: 3px solid #f0f0f0;
+    text-align: left;
 }
 
 .detail-table td {
-  height: 100%;
-  color: #000000;
-  border-bottom: 3px solid #f0f0f0;
-  font-weight: bold;
+    height: 100%;
+    color: #000000;
+    border-bottom: 3px solid #f0f0f0;
+}
+
+.detail-form__text--name {
+    padding-left: 20px;
 }
 
 .start-time {
-  width: 100px;
+    width: 100px;
 }
 
 .tilde {
-  width: 80px;
-  text-align: center;
+    width: 100px;
+    text-align: center;
 }
 
-.end-time {}
-
-.detail-form__text {
-  padding: 5px 15px;
-  border: none;
-  font-weight: bold;
-  letter-spacing: 2.4px;
+.end-time {
 }
 
-.detail-form__input {
-  width: 80px;
-  padding: 5px 10px;
-  border: none;
-  text-align: center;
-  font-weight: bold;
-  letter-spacing: 2.4px;
-  outline:none;
+.detail-form__input--active {
+    width: 100px;
+    padding: 5px 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: 2.4px;
+    font-weight: bold;
 }
 
-.detail-form__textarea {
-  width: 300px;
-  height: 60px;
-  margin-top: 10px;
-  padding: 5px 15px;
-  border: none;
-  resize: none;
-  letter-spacing: 2.4px;
-  outline: none;
+.detail-form__input--inactive {
+    width: 100px;
+    padding: 5px 10px;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
+    outline: none;
 }
 
-.detail-form__button {
-  float: right;
-  height: 40px;
-  margin-top: 80px;
-  margin-right: 0px;
-  padding: 5px 40px;
-  background-color: #000000;
-  border: none;
-  border-radius: 5px;
-  color: #ffffff;
-  font-size: large;
+.detail-form__textarea--active {
+    width: 300px;
+    height: 60px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
+    resize: none;
+}
+
+.detail-form__textarea--inactive {
+    width: 300px;
+    height: 60px;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
+    resize: none;
+}
+
+.detail-form__button--pending {
+    float: right;
+    width: 130px;
+    height: 50px;
+    margin: 80px 0px 80px auto;
+    padding: 10px 40px;
+    background-color: #000000;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 3.3px;
+}
+
+.detail-form__button--approved {
+    float: right;
+    width: 130px;
+    height: 50px;
+    margin: 80px 0px 80px auto;
+    padding: 10px;
+    background-color: #696969;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 3.3px;
+    cursor: default;
+    pointer-events: none;
+}
+
+.user-form__error-message {
+    display: block;
+    margin: 0;
+    color: #f05454;
 }

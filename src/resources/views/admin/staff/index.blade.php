@@ -7,7 +7,7 @@
 
 @section('content')
 <div class="staff__content">
-  <h1 class="staff__header">勤怠一覧</h1>
+  <h1 class="staff__header">スタッフ一覧</h1>
 
   <!-- 勤怠データの表示 -->
   <table class="staff-table">
@@ -21,15 +21,14 @@
     <tbody>
       @foreach ($staffList as $staff)
       <tr>
-        <td class="staff-table__td--name">{{ $staff['last_name'] . $staff['first_name'] }}</td>
+        <td class="staff-table__td--name">{{ $staff['name'] }}</td>
         <td class="staff-table__td--email">{{ $staff['email'] }}</td>
         <td class="staff-table__td--link">
-          <a href="http://localhost/admin/attendance/staff/2" class="staff-table__td--detail">詳細</a>
+          <a class="staff-table__td--detail" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id]) }}" >詳細</a>
         </td>
       </tr>
       @endforeach
     </tbody>
-
-
+  </table>
 </div>
 @endsection('content')

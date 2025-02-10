@@ -19,8 +19,13 @@ class Attendance extends Model
         'note',
     ];
 
-    public function BreakTime()
+    public function User()
     {
-        return $this->belongsTo(BreakTime::class);
+        return $this->belongsTo(User::class);
+    }
+
+    public function Status()
+    {
+        return $this->belongsTo(Status::class);
     }
 }

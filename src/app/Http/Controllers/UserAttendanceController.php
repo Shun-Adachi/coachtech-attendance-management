@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\SubmitCorrectionRequest;
 use App\Models\Attendance;
 use App\Models\BreakTime;
 use Carbon\Carbon;
 
 class UserAttendanceController extends Controller
 {
-    // 勤怠登録画面
+    // 勤怠登録画面表示
     public function create(Request $request)
     {
         $user = Auth::user();
@@ -28,7 +29,7 @@ class UserAttendanceController extends Controller
     }
 
     // 勤怠登録処理
-    public function updateAttendance(Request $request)
+    public function registerAttendance(Request $request)
     {
         $user = Auth::user();
         $today = Carbon::today();
@@ -56,7 +57,7 @@ class UserAttendanceController extends Controller
     }
 
     // 休憩処理
-    public function storeBreak(Request $request)
+    public function break(Request $request)
     {
         $user = Auth::user();
         $today = Carbon::today();
@@ -87,7 +88,7 @@ class UserAttendanceController extends Controller
         return redirect('/attendance');
     }
 
-    // 勤怠一覧画面
+    // 勤怠一覧画面表示
     public function index(Request $request, $year = null, $month = null)
     {
         $user = Auth::user();
@@ -105,88 +106,97 @@ class UserAttendanceController extends Controller
             ->get();
 
         // 今月のカレンダーの日付リストを作成
-        $daysInMonth = [];
-        for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
-            $formattedDate = $date->format('Y-m-d');
-            $attendance = $attendances->firstWhere('attendance_at', $formattedDate);
-            $dayOfWeekJP = ['日', '月', '火', '水', '木', '金', '土'][$date->dayOfWeek];
-            if ($attendance) {
-                // 出勤時刻
-                $attendance->formatted_clock_in = $attendance->clock_in
-                    ? Carbon::parse($attendance->clock_in)->format('H:i')
-                    : '';
 
-                // 退勤時刻
-                $attendance->formatted_clock_out = $attendance->clock_out
-                    ? Carbon::parse($attendance->clock_out)->format('H:i')
-                    : '';
-
-                // 休憩時間の合計（未終了の休憩は除外）
-                $attendance->total_break = BreakTime::where('attendance_id', $attendance->id)
-                    ->whereNotNull('break_out')
-                    ->get()
-                    ->sum(function ($break) {
-                        return Carbon::parse($break->break_out)->diffInMinutes($break->break_in);
-                });
-                $time = Carbon::createFromTimestampUTC($attendance->total_break * 60);
-                $attendance->formatted_total_break = $time->format('H:i');
-
-                // 勤務時間の合計（退勤時刻 - 出勤時刻 - 休憩時間）
-                if ($attendance->clock_out) {
-                    $total_work_minutes  = Carbon::parse($attendance->formatted_clock_out)->diffInMinutes($attendance->formatted_clock_in ) - $attendance->total_break;
-                    $attendance->formatted_total_work = gmdate('H:i', max($total_work_minutes * 60, 0));
-                } else {
-                    $attendance->formatted_total_work = '';
-                }
-            }
-            $daysInMonth[$formattedDate] = $attendance;
-        }
+        $daysInMonth = createCalendarDays($startOfMonth, $endOfMonth, $attendances);
 
         return view('attendance.index', compact('user', 'daysInMonth', 'currentDate', 'prevMonth', 'nextMonth'));
     }
 
-
-    // 勤怠詳細画面
+    // 勤怠詳細画面表示
     public function showAttendance(Request $request)
     {
         $user = Auth::user();
-
-        // 勤怠データ（仮データをサンプルとして用意）
-        $attendanceData = [
-            '01' => [
-                'start' => '09:00',
-                'end' => '18:00',
-                'break_in' => '12:00',
-                'break_out' => '13:00',
-                'note' => '電車遅延のため',
-            ]
-        ];
-
-        return view('attendance.show', compact('user', 'attendanceData'));
+        $attendance = Attendance::with('user')->where('id',$request->attendance_id)->first();
+        $attendance->formatted_year = Carbon::parse($attendance->attendance_at)->format('Y年');
+        $attendance->formatted_date = Carbon::parse($attendance->attendance_at)->format('n月j日');
+        $attendance->formatted_clock_in =$attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : null;
+        $attendance->formatted_clock_out = $attendance->clock_out ? Carbon::parse($attendance->clock_out)->format('H:i') : null;
+        $breakTimes = BreakTime::where('attendance_id',$request->attendance_id)->get();
+        $breakTimes->transform(function ($break) {
+            $break->break_in = $break->break_in ? Carbon::parse($break->break_in)->format('H:i') : null;
+            $break->break_out = $break->break_out ? Carbon::parse($break->break_out)->format('H:i') : null;
+            return $break;
+        });
+        $isSubmitted = $attendance->status_id===config('constants.STATUS_PENDING') || $attendance->status_id===config('constants.STATUS_APPROVED');
+        return view('attendance.show', compact('user', 'attendance', 'breakTimes','isSubmitted'));
     }
 
-    // 申請一覧画面
+    // 修正申請処理
+    public function submitCorrection(SubmitCorrectionRequest $request)
+    {
+        $validated = $request->validated();
+        $attendance = Attendance::find($request->attendance_id);
+        if (!$attendance) {
+            return redirect()->back()->withErrors(['attendance' => '勤怠データが見つかりませんでした。']);
+        }
+
+        // 他のユーザーに更新されていないことの確認
+        $clientUpdatedAt = Carbon::parse($validated['updated_at']);
+        if ($attendance->updated_at->gt($clientUpdatedAt)) {
+            return redirect()->back()->withErrors(['attendance' => '他のユーザーが修正処理を行ったので処理を中止しました。']);
+        }
+
+        // 出退勤時間の更新
+        $attendance->clock_in  = $validated['clock_in'];
+        $attendance->clock_out = $validated['clock_out'];
+        $attendance->note = $validated['note'];
+        $attendance->status_id = config('constants.STATUS_PENDING');
+        $attendance->requested_at = now();
+        $attendance->save();
+
+        // 各休憩データの更新または新規追加
+        foreach ($validated['breakTimes'] as $breakTimeId => $times) {
+            // 休憩開始時間と休憩終了時間がどちらも空欄の場合は処理しない
+            if (empty(trim($times['break_in'])) && empty(trim($times['break_out']))) {
+                continue;
+            }
+            // 既存の休憩データの場合（IDが数値の場合）
+            if (is_numeric($breakTimeId)) {
+                $breakTime = BreakTime::find($breakTimeId);
+                if ($breakTime) {
+                    $breakTime->break_in  = $times['break_in'];
+                    $breakTime->break_out = $times['break_out'];
+                    $breakTime->save();
+                }
+            } else {
+                // 休憩データを追加する場合
+                 BreakTime::create([
+                    'attendance_id' => $attendance->id,
+                    'break_in'      => $times['break_in'],
+                    'break_out'     => $times['break_out'],
+            ]);
+            }
+        }
+    return redirect()->back()->with('message', '修正申請を提出しました');
+    }
+
+    // 申請一覧画面表示
     public function showRequests(Request $request)
     {
+        $tab = $request->tab;
         $user = Auth::user();
-
-        // 勤怠データ（仮データをサンプルとして用意）
-        $attendanceData = [
-            '01' => [
-                'status' => '承認待ち',
-                'date' => '2023/06/01',
-                'app_date' => '2023/06/02',
-                'note' => '電車遅延のため',
-            ],
-            '02' => [
-                'status' => '承認待ち',
-                'date' => '2023/06/02',
-                'app_date' => '2023/06/03',
-                'note' => '電車遅延のため',
-            ],
-            // 休みの場合やデータがない場合も考慮
-        ];
-
-        return view('applications.index', compact('user', 'attendanceData'));
+        if ($tab === 'approved'){
+            $attendances = Attendance::where('user_id',$user->id)
+                ->where('status_id', [config('constants.STATUS_APPROVED')])->get();
+        }else{
+            $attendances = Attendance::where('user_id',$user->id)
+                ->where('status_id', [config('constants.STATUS_PENDING')])->get();
+        }
+        $attendances->transform(function ($attendance) {
+            $attendance->formatted_attendance_at = $attendance->attendance_at ? Carbon::parse($attendance->attendance_at)->format('Y/m/d') : null;
+            $attendance->formatted_requested_at = $attendance->requested_at ? Carbon::parse($attendance->requested_at)->format('Y/m/d') : null;
+            return $attendance;
+        });
+        return view('applications.index', compact('user', 'attendances', 'tab'));
     }
 }

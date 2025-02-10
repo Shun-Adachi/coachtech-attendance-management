@@ -1,62 +1,64 @@
 .staff__content {
-  width: 95%;
-  max-width: 1000px;
-  margin: 40px auto;
+    width: 95%;
+    max-width: 1000px;
+    margin: 40px auto;
 }
 
 .staff__header {
-  padding-left: 20px;
-  border-left: 8px solid #000000;
+    padding-left: 20px;
+    border-left: 8px solid #000000;
 }
 
 .staff-table {
-  width: 100%;
-  margin: auto;
-  border-radius: 10px;
-  background-color: #ffffff;
-  text-align: center;
+    table-layout: fixed;
+    width: 100%;
+    margin: 80px auto;
+    border-radius: 10px;
+    background-color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
 }
 
 .staff-table tr {
-  color: #808080;
-  border-bottom: 4px solid #f0f0f0;
+    color: #808080;
+    border-bottom: 4px solid #f0f0f0;
 }
 
 .staff-table__th {
-  min-width: 60px;
-  color: #808080;
+    min-width: 60px;
 }
 
 .staff-table__th:first-child {
-  padding-left: 10%;
+    padding-left: 10%;
 }
 
 .staff-table__th:last-child {
-  padding-right: 5%;
+    padding-right: 5%;
 }
 
 .staff-table__td--name {
-  width:35%;
-  padding-left: 10%;
-  color: #808080;
-  font-weight: bold;
+    width: 35%;
+    padding-left: 10%;
+    font-weight: bold;
 }
 
 .staff-table__td--email {
-  width: 35%;
-  padding: 10px 0px;
-  color: #808080;
-  font-weight: bold;
+    width: 35%;
+    padding: 10px 0px;
+    font-weight: bold;
 }
 
 .staff-table__td--link {
-  width: 30%;
-  padding-right: 60px;
-  color: #808080;
-  font-weight: bold;
+    width: 30%;
+    padding-right: 60px;
+    font-weight: bold;
 }
 
 .staff-table__td--detail {
-  color: #000000;
-  text-decoration: none;
+    color: #000000;
+    text-decoration: none;
 }

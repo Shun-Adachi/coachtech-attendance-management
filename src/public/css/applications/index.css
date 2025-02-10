@@ -1,6 +1,6 @@
 .attendance__content {
     width: 95%;
-    max-width: 1000px;
+    max-width: 900px;
     margin: 40px auto;
 }
 
@@ -16,52 +16,93 @@
     border-bottom: 1px #000000 solid;
 }
 
-.status-tab__link {
+.status-tab__link--active {
     margin: auto 5px;
     padding: 0 40px;
     text-decoration: none;
-    font-size: large;
-    font-weight: bold;
     color: #000000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
 }
 
-.status-tab__link--active {
+.status-tab__link--inactive {
     margin: auto 5px;
-    padding: 0 20px;
+    padding: 0 40px;
     text-decoration: none;
-    font-size: large;
-    font-weight: bold;
-    color: #ff0000;
+    color: #000000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    letter-spacing: 2.4px;
 }
 
 .attendance-table {
+    table-layout: fixed;
     width: 100%;
     margin: auto;
     border-radius: 10px;
     background-color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .attendance-table th {
-    min-width: 60px;
-    padding: 10px 0px 10px 4%;
     color: #808080;
     border-bottom: 4px solid #f0f0f0;
-    text-align: left;
 }
 
 .attendance-table tr {
+    height: 50px;
     color: #808080;
 }
 
 .attendance-table td {
-    padding: 10px 0px 10px 4%;
     color: #808080;
     border-bottom: 3px solid #f0f0f0;
-    font-weight: bold;
 }
 
-.attendance-table a {
+.attendance-table__text--status {
+    width: 15%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    letter-spacing: 2.4px;
+}
+
+.attendance-table__text--name {
+    width: 15%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    letter-spacing: 2.4px;
+}
+
+.attendance-table__text--date {
+    width: 15%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.attendance-table__text--note {
+    width: 25%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align: left;
+    letter-spacing: 2.4px;
+}
+
+.attendance-table__text--detail {
+    width: 15%;
     color: #000000;
+    text-align: left;
     text-decoration: none;
 }
 

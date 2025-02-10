@@ -17,6 +17,10 @@
     margin-bottom: 60px;
     border-radius: 10px;
     background-color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
 }
 
 .month-selector__link {
@@ -28,6 +32,7 @@
     font-weight: bold;
     font-size: large;
     text-decoration: none;
+    letter-spacing: 2.4px;
 }
 
 .month-selector__group {
@@ -52,7 +57,7 @@
 .month-selector__header {
     align-content: center;
     margin: auto 0px;
-    font-size: x-large;
+    font-size: 20px;
 }
 
 .attendance-table {
@@ -60,6 +65,11 @@
     margin: auto;
     border-radius: 10px;
     background-color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 2.4px;
 }
 
 .attendance-table th {
@@ -78,7 +88,6 @@
     padding: 10px 0px 10px 4%;
     color: #808080;
     border-bottom: 3px solid #f0f0f0;
-    font-weight: bold;
 }
 
 .attendance-table a {

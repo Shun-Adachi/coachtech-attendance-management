@@ -7,15 +7,19 @@
 
 @section('content')
 <div class="attendance__content">
-  <h1 class="attendance__header">{{$staff->last_name . $staff->first_name}}さんの勤怠</h1>
+  <h1 class="attendance__header">{{ $staff->name }}さんの勤怠</h1>
 
   <div class="month-selector">
-    <a class="month-selector__link" href="/attendance">←前月</a>
+    <a class="month-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">
+      <img class="month-selector__image--arrow" src="/images/arrow-back.png" />前月
+    </a>
     <div class="month-selector__group">
-      <img class="month-selector__image" src="/images/calendar.png" />
+      <img class="month-selector__image--calendar" src="/images/calendar.png" />
       <h2 class="month-selector__header">{{ $currentDate->format('Y/m') }}</h2>
     </div>
-    <a class="month-selector__link" href="/attendance">翌月→</a>
+    <a class="month-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">
+      翌月<img class="month-selector__image--arrow" src="/images/arrow-forward.png" />
+    </a>
   </div>
   <!-- 勤怠データの表示 -->
   <table class="attendance-table">
@@ -30,32 +34,35 @@
       </tr>
     </thead>
     <tbody>
-      @foreach (range(1, $currentDate->daysInMonth) as $day)
+      @foreach($daysInMonth as $date => $attendance)
       @php
-      $dayStr = str_pad($day, 2, '0', STR_PAD_LEFT);
-      $attendance = $attendanceData[$dayStr] ?? null;
-      $date = $currentDate->day($day);
-      $dayOfWeek = $date->isoFormat('dd'); // 日本語の曜日
+      $dayOfWeekJP = ['日', '月', '火', '水', '木', '金', '土'][\Carbon\Carbon::parse($date)->dayOfWeek];
       @endphp
       <tr>
-        <td>{{ $currentDate->format('m/d') }}({{ $dayOfWeek }})</td>
-        <td>{{ $attendance['start'] ?? '-' }}</td>
-        <td>{{ $attendance['end'] ?? '-' }}</td>
-        <td>{{ $attendance['break'] ?? '-' }}</td>
-        <td>{{ $attendance['total'] ?? '-' }}</td>
+        <td>{{ \Carbon\Carbon::parse($date)->format('m/d') }}({{ $dayOfWeekJP }})</td>
+        <td>{{ $attendance ? $attendance->formatted_clock_in : '' }}</td>
+        <td>{{ $attendance ? $attendance->formatted_clock_out : '' }}</td>
+        <td>{{ $attendance ? $attendance->formatted_total_break : '' }}</td>
+        <td>{{ $attendance ? $attendance->formatted_total_work : '' }}</td>
         <td>
           @if ($attendance)
-          <a href="http://localhost/attendance/1" class="attendance-table__link">詳細</a>
+          <a href="{{ route('attendance.show', ['attendance_id' => $attendance->id]) }}" class="attendance-table__link">詳細</a>
           @else
-          -
           @endif
         </td>
       </tr>
       @endforeach
     </tbody>
   </table>
-  <form action="{{'/export?'.http_build_query(request()->query())}}" method="post">
+  <form action="{{ route('admin.attendance.staff.export') }}" method="post">
     @csrf
+    <!-- スタッフID -->
+    <input type="hidden" name="staffId" value="{{ $staff->id }}">
+    <!-- 現在の日付（例：'2025-02-09'） -->
+    <input type="hidden" name="currentDate" value="{{ $currentDate }}">
+    <!-- 勤怠データを JSON 形式で送信 -->
+    <input type="hidden" name="daysInMonth" value="{{ json_encode($daysInMonth) }}">
+
     <input class="export__button" type="submit" value="CSV出力">
   </form>
 </div>

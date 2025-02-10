@@ -53,7 +53,6 @@
       </tr>
       @endforeach
     </tbody>
-
-
+  </table>
 </div>
 @endsection('content')

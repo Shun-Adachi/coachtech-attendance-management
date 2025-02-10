@@ -15,10 +15,10 @@ class RouteBasedOnRole
             return redirect('/login');
         }
         session(['key' => 'value']);
-        if (Auth::user()->role_id == 1) {
-            $response = app()->call([$adminController, $adminAction], ['request' => $request]);
-        } elseif (Auth::user()->role_id == 2) {
-            $response = app()->call([$userController, $userAction], ['request' => $request]);
+        if (Auth::user()->role_id == config('constants.ROLE_ADMIN')) {
+            $response = app()->call([$adminController, $adminAction]);
+        } elseif (Auth::user()->role_id == config('constants.ROLE_USER')) {
+            $response = app()->call([$userController, $userAction]);
         } else {
             abort(403, 'Unauthorized');
         }

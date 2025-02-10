@@ -20,7 +20,6 @@ class AttendancesTableSeeder extends Seeder
         $startOfLastMonth = $lastMonth->copy()->startOfMonth();
         $endOfLastMonth   = $lastMonth->copy()->endOfMonth();
 
-        // 対象ユーザー（2名）のIDリスト（実際のIDに合わせてください）
         $userIds = [2, 3];
 
         // 先月の各日について、各ユーザー分の勤怠データを作成

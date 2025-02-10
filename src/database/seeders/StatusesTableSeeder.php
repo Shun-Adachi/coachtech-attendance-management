@@ -15,7 +15,7 @@ class StatusesTableSeeder extends Seeder
     public function run()
     {
         $param = [
-            'name' => '出勤',
+            'name' => '出勤前',
         ];
         DB::table('statuses')->insert($param);
 
@@ -30,7 +30,7 @@ class StatusesTableSeeder extends Seeder
         DB::table('statuses')->insert($param);
 
         $param = [
-            'name' => '退勤',
+            'name' => '退勤済み',
         ];
         DB::table('statuses')->insert($param);
 
