@@ -2,29 +2,30 @@
 @extends('layouts.link')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/common/main-content.css')}}">
 <link rel="stylesheet" href="{{ asset('css/admin/staff/index.css')}}">
 @endsection
 
 @section('content')
-<div class="staff__content">
-  <h1 class="staff__header">スタッフ一覧</h1>
+<div class="main-content">
+  <h1 class="main-content__header">スタッフ一覧</h1>
 
   <!-- 勤怠データの表示 -->
-  <table class="staff-table">
+  <table class="table">
     <thead>
       <tr>
-        <th class="staff-table__th">名前</th>
-        <th class="staff-table__th">メールアドレス</th>
-        <th class="staff-table__th">月次勤怠</th>
+        <th >名前</th>
+        <th >メールアドレス</th>
+        <th >月次勤怠</th>
       </tr>
     </thead>
     <tbody>
       @foreach ($staffList as $staff)
       <tr>
-        <td class="staff-table__td--name">{{ $staff['name'] }}</td>
-        <td class="staff-table__td--email">{{ $staff['email'] }}</td>
-        <td class="staff-table__td--link">
-          <a class="staff-table__td--detail" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id]) }}" >詳細</a>
+        <td class="name">{{ $staff['name'] }}</td>
+        <td class="email">{{ $staff['email'] }}</td>
+        <td class="link">
+          <a class="detail" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id]) }}" >詳細</a>
         </td>
       </tr>
       @endforeach

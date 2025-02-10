@@ -8,6 +8,7 @@
   <title>Coachtech-free-market</title>
   <link rel="stylesheet" href="{{ asset('css/common/sanitize.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/common/header.css')}}">
+  <link rel="stylesheet" href="{{ asset('css/common/components.css')}}">
   @yield('css')
   @yield('script')
 </head>
@@ -15,7 +16,7 @@
 <body>
   <div class="app">
     <header class="header">
-      <a class="header-logo__link" href="/">
+      <a class="header-logo__link">
         <img class="header-logo__image" src=" /images/logo.svg" />
       </a>
       <div class="header-link">

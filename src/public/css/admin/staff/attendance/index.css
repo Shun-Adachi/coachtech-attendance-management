@@ -1,103 +1,7 @@
-.attendance__content {
-    width: 95%;
-    max-width: 1000px;
-    margin: 40px auto;
-}
-
-.attendance__header {
-    padding-left: 20px;
-    border-left: 8px solid #000000;
-}
-
-.month-selector {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 60px;
-    margin-bottom: 60px;
-    border-radius: 10px;
-    background-color: #ffffff;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-}
-
-.month-selector__link {
-    align-content: center;
-    height: 100%;
-    margin: auto 0px;
-    padding: 0px 20px;
-    color: #808080;
-    font-weight: bold;
-    font-size: large;
-    text-decoration: none;
-    letter-spacing: 2.4px;
-}
-
-.month-selector__group {
-    display: flex;
-    justify-content: space-between;
-    height: 100%;
-    margin: auto 0px;
-}
-
-.month-selector__image--calendar {
-    align-content: center;
-    height: 50%;
-    margin: auto 20px;
-}
-
-.month-selector__image--arrow {
-    align-content: center;
-    height: 30%;
-    margin: auto 10px;
-}
-
-.month-selector__header {
-    align-content: center;
-    margin: auto 0px;
-    font-size: 20px;
-}
-
-.attendance-table {
-    width: 100%;
-    margin: auto;
-    border-radius: 10px;
-    background-color: #ffffff;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: 2.4px;
-}
-
-.attendance-table th {
-    min-width: 60px;
-    padding: 10px 0px 10px 4%;
-    color: #808080;
-    border-bottom: 4px solid #f0f0f0;
-    text-align: left;
-}
-
-.attendance-table tr {
-    color: #808080;
-}
-
-.attendance-table td {
-    padding: 10px 0px 10px 4%;
-    color: #808080;
-    border-bottom: 3px solid #f0f0f0;
-}
-
-.attendance-table a {
-    color: #000000;
-    text-decoration: none;
-}
-
-.export__button {
+.export {
     float: right;
-    height: 40px;
+    width: 184px;
+    height: 50px;
     margin: 80px 0px;
 
     padding: 5px 40px;
@@ -105,5 +9,9 @@
     border: none;
     border-radius: 5px;
     color: #ffffff;
-    font-size: large;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 3.3px;
 }

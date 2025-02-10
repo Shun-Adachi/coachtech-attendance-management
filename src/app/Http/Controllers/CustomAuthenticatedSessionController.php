@@ -24,7 +24,7 @@ class CustomAuthenticatedSessionController extends Controller
     // 管理者ログインフォームを表示
     public function showAdminLogin()
     {
-        return view('auth.admin-login');
+        return view('auth.admin.login');
     }
 
     // 一般ユーザーログイン処理
@@ -70,7 +70,7 @@ class CustomAuthenticatedSessionController extends Controller
         // 認証メールを送信
         Mail::to($user->email)->send(new LoginNotification($token));
 
-        return redirect()->route('login')->withInput()->with('message', 'ログインメールを送信しました');
+        return redirect()->route('admin.login')->withInput()->with('message', 'ログインメールを送信しました');
     }
 
     // 認証ログイン
@@ -88,9 +88,9 @@ class CustomAuthenticatedSessionController extends Controller
         $user->save();
         Auth::login($user);
         if ($user->role_id === config('constants.ROLE_ADMIN')) {
-            return redirect('/admin/attendance/list')->with('message', 'ログインしました');
+            return redirect()->route('admin.attendance.list')->with('message', 'ログインしました');
         } else if ($user->role_id === config('constants.ROLE_USER')) {
-            return redirect('/attendance')->with('message', 'ログインしました');
+            return redirect()->route('admin.login')->with('message', 'ログインしました');
         }
     }
 
@@ -100,8 +100,8 @@ class CustomAuthenticatedSessionController extends Controller
         $user = Auth::user();
         Auth::logout();
         if ($user->role_id === config('constants.ROLE_ADMIN')) {
-            return redirect('/admin/login')->with('message', 'ログアウトしました');
+            return redirect()->route('admin.login')->with('message', 'ログアウトしました');
         }
-        return redirect('/login')->with('message', 'ログアウトしました');
+        return redirect()->route('login')->with('message', 'ログアウトしました');
     }
 }

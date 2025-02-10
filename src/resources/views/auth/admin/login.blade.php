@@ -2,13 +2,13 @@
 
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/common/auth-form.css')}}">
-<link rel="stylesheet" href="{{ asset('css/auth/login.css')}}">
+<link rel="stylesheet" href="{{ asset('css/auth/admin/login.css')}}">
 @endsection
 
 @section('content')
 <div class="auth-content">
-  <h1 class="auth-content__header">ログイン</h1>
-  <form class="form" action="/login" method="post" novalidate>
+  <h2 class="auth-content__header">管理者ログイン</h2>
+  <form class="form" action="/admin/login" method="post" novalidate>
     @csrf
     <div class="group">
       <label class="label" for="email">メールアドレス</label>
@@ -29,9 +29,8 @@
       </p>
     </div>
     <div class="group">
-      <input class="button" type="submit" value="ログインする">
+      <input class="button" type="submit" value="管理者ログインする">
     </div>
-    <a class="link" href="/register">会員登録はこちら</a>
   </form>
 </div>
 @endsection('content')

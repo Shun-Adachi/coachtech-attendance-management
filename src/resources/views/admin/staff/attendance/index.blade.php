@@ -2,27 +2,30 @@
 @extends('layouts.link')
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/common/main-content.css')}}">
+<link rel="stylesheet" href="{{ asset('css/common/date-selector.css')}}">
+<link rel="stylesheet" href="{{ asset('css/common/attendance-index-table.css')}}">
 <link rel="stylesheet" href="{{ asset('css/admin/staff/attendance/index.css')}}">
 @endsection
 
 @section('content')
-<div class="attendance__content">
-  <h1 class="attendance__header">{{ $staff->name }}さんの勤怠</h1>
+<div class="main-content">
+  <h1 class="main-content__header">{{ $staff->name }}さんの勤怠</h1>
 
-  <div class="month-selector">
-    <a class="month-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">
-      <img class="month-selector__image--arrow" src="/images/arrow-back.png" />前月
+  <div class="date-selector">
+    <a class="date-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">
+      <img class="date-selector__image--arrow" src="/images/arrow-back.png" />前月
     </a>
-    <div class="month-selector__group">
-      <img class="month-selector__image--calendar" src="/images/calendar.png" />
-      <h2 class="month-selector__header">{{ $currentDate->format('Y/m') }}</h2>
+    <div class="date-selector__group">
+      <img class="date-selector__image--calendar" src="/images/calendar.png" />
+      <h2 class="date-selector__header">{{ $currentDate->format('Y/m') }}</h2>
     </div>
-    <a class="month-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">
-      翌月<img class="month-selector__image--arrow" src="/images/arrow-forward.png" />
+    <a class="date-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $nextMonth->year, 'month' => $nextMonth->month]) }}">
+      翌月<img class="date-selector__image--arrow" src="/images/arrow-forward.png" />
     </a>
   </div>
   <!-- 勤怠データの表示 -->
-  <table class="attendance-table">
+  <table class="table">
     <thead>
       <tr>
         <th>日付</th>
@@ -46,7 +49,7 @@
         <td>{{ $attendance ? $attendance->formatted_total_work : '' }}</td>
         <td>
           @if ($attendance)
-          <a href="{{ route('attendance.show', ['attendance_id' => $attendance->id]) }}" class="attendance-table__link">詳細</a>
+          <a class="detail" href="{{ route('attendance.show', ['attendance_id' => $attendance->id]) }}">詳細</a>
           @else
           @endif
         </td>
@@ -63,7 +66,7 @@
     <!-- 勤怠データを JSON 形式で送信 -->
     <input type="hidden" name="daysInMonth" value="{{ json_encode($daysInMonth) }}">
 
-    <input class="export__button" type="submit" value="CSV出力">
+    <input class="export" type="submit" value="CSV出力">
   </form>
 </div>
 @endsection('content')
