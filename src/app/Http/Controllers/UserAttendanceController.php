@@ -29,7 +29,7 @@ class UserAttendanceController extends Controller
     }
 
     // 勤怠登録処理
-    public function registerAttendance(Request $request)
+    public function register(Request $request)
     {
         $user = Auth::user();
         $today = Carbon::today();
@@ -106,7 +106,6 @@ class UserAttendanceController extends Controller
             ->get();
 
         // 今月のカレンダーの日付リストを作成
-
         $daysInMonth = createCalendarDays($startOfMonth, $endOfMonth, $attendances);
 
         return view('attendance.index', compact('user', 'daysInMonth', 'currentDate', 'prevMonth', 'nextMonth'));

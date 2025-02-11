@@ -229,7 +229,7 @@ class AdminAttendanceController extends Controller
         return view('admin.applications.approve', compact('user', 'attendance', 'breakTimes','isApproved'));
     }
 
-    // 修正処理
+    // 承認処理
     public function approve(Request $request)
     {
         $attendance = Attendance::where('id',$request->attendance_id)->where('status_id', config('constants.STATUS_PENDING'))->first();

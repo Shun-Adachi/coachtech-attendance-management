@@ -29,7 +29,6 @@ class SubmitCorrectionRequest extends FormRequest
             'date' => ['required', 'regex:/^(0?[1-9]|1[0-2])月(0?[1-9]|[12]\d|3[01])日$/'],
             'clock_in' => ['required', 'date_format:H:i'],
             'clock_out' => ['required', 'date_format:H:i'],
-            'breakTimes' => ['required', 'array'],
             'breakTimes.*.break_in'  => ['nullable', 'date_format:H:i'],
             'breakTimes.*.break_out' => ['nullable', 'date_format:H:i'],
             'note' => ['required'],
@@ -59,7 +58,7 @@ class SubmitCorrectionRequest extends FormRequest
                 $clockOut = null;
             }
 
-            // 1. 出勤・退勤時間の整合性チェック
+            //  出勤・退勤時間の整合性チェック
             if ($clockIn && $clockOut && $clockIn->gt($clockOut)) {
                 $validator->errors()->add('clock_in', '出勤時間もしくは退勤時間が不適切な値です');
             }
@@ -94,6 +93,10 @@ class SubmitCorrectionRequest extends FormRequest
                     if ($clockOut && $breakOut->gt($clockOut)) {
                         $validator->errors()->add("breakTimes.$key.break_out", '休憩時間が勤務時間外です');
                     }
+                    // 休憩開始時間が休憩終了時間よりも前の場合エラー
+                    if ($breakIn && $breakOut && $breakOut->lt($breakIn)) {
+                        $validator->errors()->add("breakTimes.$key.break_in", '休憩開始時間もしくは休憩終了時間が不適切な値です');
+                    }
                 }
             }
         });
@@ -115,8 +118,6 @@ class SubmitCorrectionRequest extends FormRequest
             'clock_in.date_format' => '出勤時間は「HH:MM」形式で入力してください',
             'clock_out.required' => '退勤時間を記入してください',
             'clock_out.date_format' => '退勤時間は「HH:MM」形式で入力してください',
-            'breakTimes.required' => '休憩時間を記入してください',
-            'breakTimes.array' => '休憩データの形式が不正です',
             'breakTimes.*.break_in.required' => '休憩開始時間を記入してください',
             'breakTimes.*.break_in.date_format' => '休憩開始時間は「HH:MM」形式で記入してください',
             'breakTimes.*.break_out.required' => '休憩終了時間を記入してください',
