@@ -33,7 +33,6 @@ if (!function_exists('formatTotalBreakTime')) {
      */
     function formatTotalBreakTime($totalBreakMinutes)
     {
-        // Carbon::createFromTimestampUTC() は秒単位なので、分×60 して変換
         $time = Carbon::createFromTimestampUTC($totalBreakMinutes * 60);
         return $time->format('H:i');
     }
@@ -57,11 +56,8 @@ if (!function_exists('calculateFormattedTotalWorkTime')) {
         // 出勤・退勤時刻をCarbonオブジェクトに変換し、秒を0に設定
         $clockInTime = Carbon::parse($clockIn)->setSecond(0);
         $clockOutTime = Carbon::parse($clockOut)->setSecond(0);
-        // 出勤・退勤の時刻を Carbon オブジェクトに変換して差分を分単位で取得
         $workMinutes = $clockInTime->diffInMinutes($clockOutTime);
-        // 休憩時間を引く
         $workMinutes -= $totalBreakMinutes;
-        // gmdate() で "H:i" 形式にフォーマット（負の値対策に max() を使用）
         return gmdate('H:i', max($workMinutes * 60, 0));
     }
 }
@@ -79,10 +75,8 @@ if (!function_exists('createCalendarDays')) {
     function createCalendarDays(Carbon $startOfMonth, Carbon $endOfMonth, $attendances)
     {
         $days = [];
-        // 月初～月末までループ
         for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
             $formattedDate = $date->format('Y-m-d');
-            // 勤怠データコレクションから attendance_at が該当の日付のデータを取得
             $attendance = $attendances->firstWhere('attendance_at', $formattedDate);
 
             // 勤怠データが存在する場合、フォーマット処理を実施
@@ -93,20 +87,15 @@ if (!function_exists('createCalendarDays')) {
                 $attendance->formatted_clock_out = $attendance->clock_out
                     ? Carbon::parse($attendance->clock_out)->format('H:i')
                     : '';
-
-                // 休憩時間の合計（ヘルパー関数 calculateTotalBreakMinutes() などを利用）
                 $totalBreak = calculateTotalBreakMinutes($attendance->id);
                 $attendance->total_break = $totalBreak;
                 $attendance->formatted_total_break = formatTotalBreakTime($totalBreak);
-                // 勤務時間の合計（退勤 - 出勤 - 休憩時間）
                 $attendance->formatted_total_work = calculateFormattedTotalWorkTime(
                     $attendance->clock_in,
                     $attendance->clock_out,
                     $totalBreak
                 );
             }
-
-            // キーを日付文字列として配列にセット
             $days[$formattedDate] = $attendance;
         }
         return $days;

@@ -115,7 +115,7 @@ class UserAttendanceController extends Controller
     public function showAttendance(Request $request)
     {
         $user = Auth::user();
-        $attendance = Attendance::with('user')->where('id',$request->attendance_id)->first();
+        $attendance = Attendance::with('user')->where('user_id',$user->id)->where('id',$request->attendance_id)->first();
         $attendance->formatted_year = Carbon::parse($attendance->attendance_at)->format('Y年');
         $attendance->formatted_date = Carbon::parse($attendance->attendance_at)->format('n月j日');
         $attendance->formatted_clock_in =$attendance->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : null;
@@ -146,7 +146,6 @@ class UserAttendanceController extends Controller
         }
 
         // 入力されたyearとdateを結合してYYYY-MM-DD形式に変換する
-        // 例: year: "2025年"、date: "4月15日"  → "2025-04-15"
         $yearStr = rtrim($validated['year'], '年');
 
         if (preg_match('/^(\d{1,2})月(\d{1,2})日$/', $validated['date'], $matches)) {

@@ -64,10 +64,7 @@ class SubmitCorrectionRequest extends FormRequest
             }
             // 送信された各休憩データのチェック
             $data = $this->input('breakTimes', []);
-            foreach ($data as $key => $break) {/*
-                if (empty($break['break_in']) && empty($break['break_out'])) {
-                    continue;
-                }*/
+            foreach ($data as $key => $break) {
                 if (isset($break['break_in'], $break['break_out'])) {
                     try {
                         // 各休憩時間を作成（同じ日付を仮定）
