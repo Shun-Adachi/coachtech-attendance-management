@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AdminAttendanceController extends Controller
 {
-
     // 勤怠一覧画面
     public function index(Request $request, $year = null, $month = null, $day = null)
     {
@@ -210,7 +209,6 @@ class AdminAttendanceController extends Controller
                 config('constants.STATUS_PENDING'),
                 config('constants.STATUS_APPROVED')
             ])->first();
-        //
         if(!$attendance){
             return redirect()->back()->withErrors(['attendance' => '勤怠データが見つかりませんでした。']);
         }

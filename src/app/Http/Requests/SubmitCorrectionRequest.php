@@ -64,10 +64,10 @@ class SubmitCorrectionRequest extends FormRequest
             }
             // 送信された各休憩データのチェック
             $data = $this->input('breakTimes', []);
-            foreach ($data as $key => $break) {
+            foreach ($data as $key => $break) {/*
                 if (empty($break['break_in']) && empty($break['break_out'])) {
                     continue;
-                }
+                }*/
                 if (isset($break['break_in'], $break['break_out'])) {
                     try {
                         // 各休憩時間を作成（同じ日付を仮定）
@@ -79,19 +79,19 @@ class SubmitCorrectionRequest extends FormRequest
                     }
                     // 休憩開始時間が出勤時間よりも前の場合エラー
                     if ($clockIn && $breakIn->lt($clockIn)) {
-                        $validator->errors()->add("breakTimes.$key.break_in", '休憩時間が勤務時間外です');
+                        $validator->errors()->add("breakTimes.$key.break_in", '休憩開始時間が勤務時間外です');
                     }
                     // 休憩開始時間が退勤時間よりも後の場合エラー
                     if ($clockOut && $breakIn->gt($clockOut)) {
-                        $validator->errors()->add("breakTimes.$key.break_in", '休憩時間が勤務時間外です');
+                        $validator->errors()->add("breakTimes.$key.break_in", '休憩開始時間が勤務時間外です');
                     }
                     // 休憩終了時間が出勤時間よりも前の場合エラー
                     if ($clockIn && $breakOut->lt($clockIn)) {
-                        $validator->errors()->add("breakTimes.$key.break_out", '休憩時間が勤務時間外です');
+                        $validator->errors()->add("breakTimes.$key.break_out", '休憩終了時間が勤務時間外です');
                     }
                     // 休憩終了時間が退勤時間よりも後の場合エラー
                     if ($clockOut && $breakOut->gt($clockOut)) {
-                        $validator->errors()->add("breakTimes.$key.break_out", '休憩時間が勤務時間外です');
+                        $validator->errors()->add("breakTimes.$key.break_out", '休憩終了時間が勤務時間外です');
                     }
                     // 休憩開始時間が休憩終了時間よりも前の場合エラー
                     if ($breakIn && $breakOut && $breakOut->lt($breakIn)) {

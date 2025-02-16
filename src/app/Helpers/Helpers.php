@@ -17,7 +17,7 @@ if (!function_exists('calculateTotalBreakMinutes')) {
             ->whereNotNull('break_out')
             ->get()
             ->sum(function ($break) {
-                return Carbon::parse($break->break_out)->diffInMinutes(Carbon::parse($break->break_in));
+                return Carbon::parse($break->break_in)->diffInMinutes(Carbon::parse($break->break_out));
             });
     }
 }
@@ -53,7 +53,7 @@ if (!function_exists('calculateFormattedTotalWorkTime')) {
             return '';
         }
         // 出勤・退勤の時刻を Carbon オブジェクトに変換して差分を分単位で取得
-        $workMinutes = Carbon::parse($clockOut)->diffInMinutes(Carbon::parse($clockIn));
+        $workMinutes = Carbon::parse($clockIn)->diffInMinutes(Carbon::parse($clockOut));
         // 休憩時間を引く
         $workMinutes -= $totalBreakMinutes;
         // gmdate() で "H:i" 形式にフォーマット（負の値対策に max() を使用）

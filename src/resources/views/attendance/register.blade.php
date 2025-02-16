@@ -65,4 +65,27 @@
     setInterval(updateDateTime, 1000); // 毎秒更新
   };
 </script>
+
+@if(app()->environment('testing'))
+<script>
+  // テスト環境では、Dateを固定する
+  (function() {
+    const fixedTime = new Date('2025-02-13T14:30:00+00:00');
+    const OriginalDate = Date;
+    Date = class extends OriginalDate {
+      constructor(...args) {
+        if (args.length === 0) {
+          super(fixedTime);
+        } else {
+          super(...args);
+        }
+      }
+      static now() {
+      return fixedTime.getTime();
+      }
+    };
+  })();
+</script>
+@endif
+
 @endsection('content')
