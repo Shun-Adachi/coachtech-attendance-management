@@ -352,9 +352,9 @@ class StampCorrectionRequestForUserTest extends TestCase
         $updateData2 = [
             'attendance_id' => $attendance2->id,
             'updated_at'    => $attendance2->updated_at->format('Y-m-d H:i:s'),
-            'year'          => $today->format('Y年'),
-            'date'          => $today->format('n月j日'),
-            'clock_in'      => '09:20',  // 修正後の出勤時刻
+            'year'          => $today->copy()->addDay()->format('Y年'),
+            'date'          => $today->copy()->addDay()->format('n月j日'),
+            'clock_in'      => '09:20',
             'clock_out'     => '18:00',
             'note'          => '修正申請2',
                 'breakTimes'    => [

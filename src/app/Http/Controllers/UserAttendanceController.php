@@ -42,7 +42,7 @@ class UserAttendanceController extends Controller
                 'clock_in' => now(),
             ]);
             $attendance = Attendance::where('user_id', $user->id)->whereDate('attendance_at', $today)->first();
-            $request->session()->flash('message', '勤務開始時刻を登録しました');
+            session()->flash('message', '勤務開始時刻を登録しました');
         }
         // 勤務中の場合、退勤ステータスに変更
         elseif ($attendance->status_id === config('constants.STATUS_WORKING')) {
@@ -51,7 +51,7 @@ class UserAttendanceController extends Controller
                 'clock_out' => now(),
             ]);
             $attendance = Attendance::where('user_id', $user->id)->whereDate('attendance_at', $today)->first();
-            $request->session()->flash('message', '勤務を終了しました');
+            session()->flash('message', '勤務を終了しました');
         }
         return redirect('/attendance');
     }
@@ -72,7 +72,7 @@ class UserAttendanceController extends Controller
                 'attendance_id' => $attendance->id,
                 'break_in' => now(),
             ]);
-            $request->session()->flash('message', '休憩を開始しました');
+            session()->flash('message', '休憩を開始しました');
         }
         // 休憩中の場合、休憩戻り処理を行う
         else if($attendance->status_id === config('constants.STATUS_BREAK')){
@@ -83,7 +83,7 @@ class UserAttendanceController extends Controller
                 'attendance_id' => $attendance->id,
                 'break_out' => now(),
             ]);
-            $request->session()->flash('message', '休憩を終了しました');}
+            session()->flash('message', '休憩を終了しました');}
 
         return redirect('/attendance');
     }
@@ -145,6 +145,31 @@ class UserAttendanceController extends Controller
             return redirect()->back()->withErrors(['attendance' => '他のユーザーが修正処理を行ったので処理を中止しました。']);
         }
 
+        // 入力されたyearとdateを結合してYYYY-MM-DD形式に変換する
+        // 例: year: "2025年"、date: "4月15日"  → "2025-04-15"
+        $yearStr = rtrim($validated['year'], '年');
+
+        if (preg_match('/^(\d{1,2})月(\d{1,2})日$/', $validated['date'], $matches)) {
+            $month = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+            $day   = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
+        } else {
+            return redirect()->back()->withErrors(['date' => '日付の形式が正しくありません。']);
+        }
+        $newAttendanceAt = $yearStr . '-' . $month . '-' . $day;
+
+        // 変更後の日付が現在の attendance_at と異なる場合は、重複チェックを実施
+        if ($attendance->attendance_at != $newAttendanceAt) {
+            $existingAttendance = Attendance::where('attendance_at', $newAttendanceAt)
+                ->where('user_id', $attendance->user_id)
+                ->where('id', '<>', $attendance->id)
+                ->first();
+            if ($existingAttendance) {
+                return redirect()->back()->withErrors(['attendance' => '変更後の日付はすでに存在します。']);
+            }
+            // 重複がなければ更新する
+            $attendance->attendance_at = $newAttendanceAt;
+        }
+
         // 出退勤時間の更新
         $attendance->clock_in  = $validated['clock_in'];
         $attendance->clock_out = $validated['clock_out'];
@@ -176,7 +201,7 @@ class UserAttendanceController extends Controller
             ]);
             }
         }
-    return redirect()->back()->with('message', '修正申請を提出しました');
+        return redirect()->back()->with('message', '修正申請を提出しました');
     }
 
     // 申請一覧画面表示

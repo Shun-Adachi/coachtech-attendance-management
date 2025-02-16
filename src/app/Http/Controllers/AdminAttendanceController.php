@@ -77,6 +77,30 @@ class AdminAttendanceController extends Controller
         if ($attendance->updated_at->gt($clientUpdatedAt)) {
             return redirect()->back()->withErrors(['attendance' => '他のユーザーが修正処理を行ったので処理を中止しました。']);
         }
+
+        // 入力されたyearとdateを結合してYYYY-MM-DD形式に変換する
+        $yearStr = rtrim($validated['year'], '年');
+
+        if (preg_match('/^(\d{1,2})月(\d{1,2})日$/', $validated['date'], $matches)) {
+            $month = str_pad($matches[1], 2, '0', STR_PAD_LEFT);
+            $day   = str_pad($matches[2], 2, '0', STR_PAD_LEFT);
+        } else {
+            return redirect()->back()->withErrors(['date' => '日付の形式が正しくありません。']);
+        }
+        $newAttendanceAt = $yearStr . '-' . $month . '-' . $day;
+        // 変更後の日付が現在の attendance_at と異なる場合は、重複チェックを実施
+        if ($attendance->attendance_at != $newAttendanceAt) {
+            $existingAttendance = Attendance::where('attendance_at', $newAttendanceAt)
+                ->where('user_id', $attendance->user_id)
+                ->where('id', '<>', $attendance->id)
+                ->first();
+            if ($existingAttendance) {
+                return redirect()->back()->withErrors(['attendance' => '変更後の日付はすでに存在します。']);
+            }
+            // 重複がなければ更新する
+            $attendance->attendance_at = $newAttendanceAt;
+        }
+
         // 出退勤時間の更新
         $attendance->clock_in  = $validated['clock_in'];
         $attendance->clock_out = $validated['clock_out'];
