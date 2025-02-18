@@ -10,8 +10,6 @@
 @section('content')
 <div class="main-content">
   <h1 class="main-content__header">勤怠詳細</h1>
-
-
   @error('year')
     <div class="error-message">
     {{ $message }}
@@ -35,23 +33,23 @@
   @foreach($breakTimes as $index => $break)
     @error("breakTimes.$break->id.break_in")
       <div class="error-message">
-      休憩{{$index + 1}}：{{ $message }}
+      休憩{{$index + 1}}:{{ $message }}
       </div>
     @enderror
     @error("breakTimes.$break->id.break_out")
       <div class="error-message">
-      休憩{{$index + 1}}：{{ $message }}
+      休憩{{$index + 1}}:{{ $message }}
       </div>
     @enderror
   @endforeach
   @error("breakTimes.new.break_in")
     <div class="error-message">
-    休憩{{count($breakTimes) + 1 }}：{{ $message }}
+    休憩{{count($breakTimes) + 1 }}:{{ $message }}
     </div>
   @enderror
   @error("breakTimes.new.break_out")
     <div class="error-message">
-    休憩{{count($breakTimes) + 1 }}：{{ $message }}
+    休憩{{count($breakTimes) + 1 }}:{{ $message }}
     </div>
   @enderror
   @error('note')
@@ -64,7 +62,6 @@
     {{ $message }}
     </div>
   @enderror
-
   <!-- 勤怠の詳細表示 -->
   <form class="form" action="/stamp_correction_request/approve/{{ $attendance->id }}" method="post" novalidate>
     @csrf

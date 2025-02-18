@@ -9,7 +9,6 @@
 @section('content')
 <div class="main-content">
   <h1 class="main-content__header">スタッフ一覧</h1>
-
   <!-- 勤怠データの表示 -->
   <table class="table">
     <thead>

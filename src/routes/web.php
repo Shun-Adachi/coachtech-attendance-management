@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:' . config('constants.ROLE_USER'))->group(function () {
         Route::get('/attendance', [UserAttendanceController::class, 'create'])->name('attendance');
         Route::post('/attendance', [UserAttendanceController::class, 'register'])->name('attendance');
-        Route::post('/attendance/break', [UserAttendanceController::class, 'break'])->name('attendance');
+        Route::post('/attendance/break', [UserAttendanceController::class, 'break'])->name('attendance.break');
         Route::get('/attendance/list/{year?}/{month?}', [UserAttendanceController::class, 'index'])->name('attendance.list');
     });
 

@@ -17,7 +17,6 @@
   @else
   <p class="form__text">退勤済</p>
   @endif
-
   <input class="form__input--date" type="text" name="current_date" id="currentDate" readonly>
   <input class="form__input--time" type="text" name="current_time" id="currentTime" readonly>
   <div class="form__group">

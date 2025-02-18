@@ -11,7 +11,6 @@
 @section('content')
 <div class="main-content">
   <h1 class="main-content__header">申請一覧</h1>
-
   <!-- タブ -->
   <div class="tab">
     <a class="tab__link--{{ $tab === 'approved' ? 'inactive' : 'active' }}" href="/stamp_correction_request/list">承認待ち</a>

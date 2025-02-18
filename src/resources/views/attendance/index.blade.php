@@ -11,7 +11,7 @@
 @section('content')
 <div class="main-content">
   <h1 class="main-content__header">勤怠一覧</h1>
-
+  <!-- 年月の選択 -->
   <div class="date-selector">
     <a class="date-selector__link" href="{{ route('attendance.list', ['year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">
       <img class="date-selector__image--arrow" src="/images/arrow-back.png" />前月

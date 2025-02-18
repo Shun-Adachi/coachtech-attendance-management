@@ -11,7 +11,7 @@
 @section('content')
 <div class="main-content">
   <h1 class="main-content__header">{{ $staff->name }}さんの勤怠</h1>
-
+  <!-- 年月の選択 -->
   <div class="date-selector">
     <a class="date-selector__link" href="{{ route('admin.attendance.staff', ['user_id' => $staff->id, 'year' => $prevMonth->year, 'month' => $prevMonth->month]) }}">
       <img class="date-selector__image--arrow" src="/images/arrow-back.png" />前月
