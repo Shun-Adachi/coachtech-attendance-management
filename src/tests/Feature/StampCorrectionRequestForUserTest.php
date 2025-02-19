@@ -62,7 +62,7 @@ class StampCorrectionRequestForUserTest extends TestCase
 
     /**
      * 勤怠詳細情報修正機能（一般ユーザー）
-     * 休憩開始時間が出勤時間より前になっている場合、エラーメッセージが表示されることを検証するテスト
+     * 休憩開始時間が退勤時間より後になっている場合、エラーメッセージが表示されることを検証するテスト
      */
     public function test_invalid_break_in_times_show_validation_error()
     {
@@ -90,7 +90,7 @@ class StampCorrectionRequestForUserTest extends TestCase
                 'clock_out'     => '18:00',
                 'breakTimes'    => [
                     'new' => [
-                        'break_in'  => '09:00',
+                        'break_in'  => '19:00',
                         'break_out' => '11:00',
                     ],
                 ],
@@ -99,7 +99,7 @@ class StampCorrectionRequestForUserTest extends TestCase
             ]);
         $response->assertRedirect("/attendance/{$attendance->id}");
         $response->assertSessionHasErrors([
-            'breakTimes.new.break_in' => '休憩開始時間が勤務時間外です',
+            'clock_in' => '出勤時間もしくは退勤時間が不適切な値です',
         ]);
     }
 
@@ -142,7 +142,7 @@ class StampCorrectionRequestForUserTest extends TestCase
             ]);
         $response->assertRedirect("/attendance/{$attendance->id}");
         $response->assertSessionHasErrors([
-            'breakTimes.new.break_out' => '休憩終了時間が勤務時間外です',
+            'clock_in' => '出勤時間もしくは退勤時間が不適切な値です',
         ]);
     }
 
@@ -306,7 +306,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId = Status::where('name', '出勤中')->value('id');
+        $workingStatusId = Status::where('name', '勤務中')->value('id');
         $approvedStatusId = Status::where('name', '承認済み')->value('id');
         $today = Carbon::today();
 

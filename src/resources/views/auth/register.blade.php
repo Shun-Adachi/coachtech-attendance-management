@@ -11,7 +11,7 @@
   <form class="form" action="/register" method="post">
     @csrf
     <div class="group">
-      <label class="label" for="name">ユーザー名</label>
+      <label class="label" for="name">名前</label>
       <input class="input" type="text" name="name" id="name" value="{{ old('name') }}">
       <p class="error-message">
         @error('name')
@@ -40,7 +40,7 @@
       </p>
     </div>
     <div class="group">
-      <label class="label" for="password_confirmation">確認用パスワード</label>
+      <label class="label" for="password_confirmation">パスワード確認</label>
       <input class="input" type="password" name="password_confirmation" id="password_confirmation">
       <p class="error-message">
         @error('password')

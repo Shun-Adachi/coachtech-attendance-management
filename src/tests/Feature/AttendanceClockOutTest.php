@@ -30,7 +30,7 @@ class AttendanceClockOutTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $leavingStatusId    = Status::where('name', '退勤済み')->value('id');
         $today = Carbon::today();
         Attendance::create([
@@ -64,7 +64,7 @@ class AttendanceClockOutTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
         Attendance::create([
             'user_id'       => $user->id,
@@ -77,7 +77,7 @@ class AttendanceClockOutTest extends TestCase
         $responseBeforeClockOut->assertStatus(200);
         $responseBeforeClockOut->assertSee('退勤');
 
-        // 出勤処理と出勤時間の確認(Carbonによるデータ取得との差を2秒まで許容)
+        // 出勤処理と出勤時間の確認(テストなのでCarbonによるデータ取得との差を2秒まで許容)
         $clockIn = Carbon::now();
         $this->post('/attendance')->assertRedirect('/attendance');
         $today = Carbon::today();

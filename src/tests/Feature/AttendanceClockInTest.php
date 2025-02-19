@@ -26,7 +26,7 @@ class AttendanceClockInTest extends TestCase
     /**
      * ステータスが勤務外のユーザーにログインし、
      * 画面に「出勤」ボタンが表示されていることを確認したうえで、
-     * 出勤の処理を行うとステータスが「出勤中」になることをテスト
+     * 出勤の処理を行うとステータスが「勤務中」になることをテスト
      */
     public function test_user_can_clock_in_when_status_is_before_work()
     {
@@ -38,7 +38,7 @@ class AttendanceClockInTest extends TestCase
         $this->post('/attendance')->assertRedirect('/attendance');
         $responseAfterClockIn = $this->get('/attendance');
         $response->assertStatus(200);
-        $responseAfterClockIn->assertSee('出勤中');
+        $responseAfterClockIn->assertSee('勤務中');
     }
 
     /**
@@ -68,11 +68,11 @@ class AttendanceClockInTest extends TestCase
     {
         // テストの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $response = $this->actingAs($user)->get('/attendance');
         $response->assertStatus(200);
 
-        // 出勤処理と出勤時間の確認(Carbonによるデータ取得との差を2秒まで許容)
+        // 出勤処理と出勤時間の確認(テストなのでCarbonによるデータ取得との差を2秒まで許容)
         $clockIn = Carbon::now();
         $this->post('/attendance')->assertRedirect('/attendance');
         $today = Carbon::today();
@@ -91,7 +91,7 @@ class AttendanceClockInTest extends TestCase
             ->whereDate('attendance_at', $today)
             ->first();
         $this->assertNotNull($updatedAttendance->clock_in, 'clock_in が保存されていません。');
-        $this->assertEquals($workingStatusId, $updatedAttendance->status_id, 'ステータスが「出勤中」に更新されていません。');
+        $this->assertEquals($workingStatusId, $updatedAttendance->status_id, 'ステータスが「勤務中」に更新されていません。');
         $clockInFormatted = Carbon::parse($updatedAttendance->clock_in)->format('H:i');
         $listResponse->assertSee($clockInFormatted);
     }

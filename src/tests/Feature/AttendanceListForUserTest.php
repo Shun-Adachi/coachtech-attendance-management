@@ -30,7 +30,7 @@ class AttendanceListForUserTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
         $attendanceData = [
             // 勤怠1: 8:00 - 17:00
@@ -154,11 +154,11 @@ class AttendanceListForUserTest extends TestCase
 
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
 
-        // 3. 当日のAttendanceレコードを作成（例：勤務中のレコード）
+        // 3. 当日のAttendanceレコードを作成
         $today = Carbon::today();
         $attendance = Attendance::create([
             'user_id'       => $user->id,
-            'status_id'     => Status::where('name', '出勤中')->value('id'),
+            'status_id'     => Status::where('name', '勤務中')->value('id'),
             'attendance_at' => $today,
             'clock_in'      => '09:00:00',
             'clock_out'     => '18:00:00',

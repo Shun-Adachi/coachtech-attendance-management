@@ -41,7 +41,7 @@ class AttendanceStatusTest extends TestCase
     public function test_attendance_status_shows_working_if_status_is_working()
     {
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId = DB::table('statuses')->where('name', '出勤中')->value('id');
+        $workingStatusId = DB::table('statuses')->where('name', '勤務中')->value('id');
         $today = Carbon::today();
         Attendance::create([
             'user_id' => $user->id,
@@ -51,7 +51,7 @@ class AttendanceStatusTest extends TestCase
 
         $response = $this->actingAs($user)->get('/attendance');
         $response->assertStatus(200);
-        $response->assertSee('出勤中');
+        $response->assertSee('勤務中');
     }
 
      /**

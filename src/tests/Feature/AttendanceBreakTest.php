@@ -32,7 +32,7 @@ class AttendanceBreakTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $breakStatusId    = Status::where('name', '休憩中')->value('id');
         $today = Carbon::today();
         Attendance::create([
@@ -45,7 +45,7 @@ class AttendanceBreakTest extends TestCase
         // 休憩処理前の確認
         $response = $this->get('/attendance');
         $response->assertStatus(200);
-        $response->assertSee('休憩');
+        $response->assertSee('休憩入');
 
         // 休憩処理後の確認
         $this->post('/attendance/break')->assertRedirect('/attendance');
@@ -69,7 +69,7 @@ class AttendanceBreakTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
         Attendance::create([
             'user_id'       => $user->id,
@@ -81,7 +81,7 @@ class AttendanceBreakTest extends TestCase
         // 休憩処理前の確認
         $responseBeforeBreakIn = $this->get('/attendance');
         $responseBeforeBreakIn->assertStatus(200);
-        $responseBeforeBreakIn->assertSee('休憩');
+        $responseBeforeBreakIn->assertSee('休憩入');
 
         // 休憩処理後の確認
         $this->post('/attendance/break')->assertRedirect('/attendance');
@@ -93,7 +93,7 @@ class AttendanceBreakTest extends TestCase
         $this->post('/attendance/break')->assertRedirect('/attendance');
         $responseBreakOut = $this->get('/attendance');
         $responseBreakOut->assertStatus(200);
-        $responseBreakOut->assertSee('休憩');
+        $responseBreakOut->assertSee('休憩入');
     }
 
     /**
@@ -103,7 +103,7 @@ class AttendanceBreakTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
         Attendance::create([
             'user_id'       => $user->id,
@@ -115,7 +115,7 @@ class AttendanceBreakTest extends TestCase
         // 休憩処理前の確認
         $responseBeforeBreakIn = $this->get('/attendance');
         $responseBeforeBreakIn->assertStatus(200);
-        $responseBeforeBreakIn->assertSee('休憩');
+        $responseBeforeBreakIn->assertSee('休憩入');
 
         // 休憩処理後の確認
         $this->post('/attendance/break')->assertRedirect('/attendance');
@@ -127,11 +127,11 @@ class AttendanceBreakTest extends TestCase
         $this->post('/attendance/break')->assertRedirect('/attendance');
         $responseBreakOut = $this->get('/attendance');
         $responseBreakOut->assertStatus(200);
-        $responseBreakOut->assertSee('休憩');
+        $responseBreakOut->assertSee('休憩入');
         $updatedAttendance = Attendance::where('user_id', $user->id)
             ->whereDate('attendance_at', $today)
             ->first();
-        $this->assertEquals($workingStatusId, $updatedAttendance->status_id, '最終的にステータスが「出勤中」に戻っていません。');
+        $this->assertEquals($workingStatusId, $updatedAttendance->status_id, '最終的にステータスが「勤務中」に戻っていません。');
         $breakTimeRecords = BreakTime::where('attendance_id', $updatedAttendance->id)->get();
         $this->assertCount(1, $breakTimeRecords, '休憩レコードの数が想定と異なります。');
         $this->assertNotNull($breakTimeRecords->first()->break_in, '休憩入り時間が記録されていません。');
@@ -145,7 +145,7 @@ class AttendanceBreakTest extends TestCase
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
         Attendance::create([
             'user_id'       => $user->id,
@@ -157,7 +157,7 @@ class AttendanceBreakTest extends TestCase
         // 休憩処理前の確認
         $responseBeforeBreakIn = $this->get('/attendance');
         $responseBeforeBreakIn->assertStatus(200);
-        $responseBeforeBreakIn->assertSee('休憩');
+        $responseBeforeBreakIn->assertSee('休憩入');
 
         // 休憩処理後の確認
         $this->post('/attendance/break')->assertRedirect('/attendance');
@@ -169,7 +169,7 @@ class AttendanceBreakTest extends TestCase
         $this->post('/attendance/break')->assertRedirect('/attendance');
         $responseBreakOut = $this->get('/attendance');
         $responseBreakOut->assertStatus(200);
-        $responseBreakOut->assertSee('休憩');
+        $responseBreakOut->assertSee('休憩入');
 
         // 再度休憩処理後の確認
         $this->post('/attendance/break')->assertRedirect('/attendance');
@@ -179,21 +179,13 @@ class AttendanceBreakTest extends TestCase
     }
 
     /**
-     * 休憩時刻が管理画面で確認できるテスト
-     *
-     * テスト手順:
-     * 1. ステータスが勤務中のユーザーにログインする
-     * 2. 休憩入と休憩戻の処理を行う
-     * 3. 管理画面 (/attendance/list) から休憩の日付を確認する
-     *
-     * 期待挙動:
-     * - 管理画面に休憩時刻が正確に記録されている
+     * 休憩時刻が管理画面で確認できることのテスト
      */
     public function test_break_time_is_recorded_in_management_screen()
     {
         // テストデータの準備
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
-        $workingStatusId    = Status::where('name', '出勤中')->value('id');
+        $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
         $attendance = Attendance::create([
             'user_id'       => $user->id,

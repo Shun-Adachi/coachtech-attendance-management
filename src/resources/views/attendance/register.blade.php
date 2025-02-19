@@ -11,7 +11,7 @@
   @if($attendance->status_id===config('constants.STATUS_ATTENDANCE'))
   <p class="form__text">勤務外</p>
   @elseif($attendance->status_id===config('constants.STATUS_WORKING'))
-  <p class="form__text">出勤中</p>
+  <p class="form__text">勤務中</p>
   @elseif($attendance->status_id===config('constants.STATUS_BREAK'))
   <p class="form__text">休憩中</p>
   @else
@@ -24,11 +24,11 @@
     <input class="form__button--clock-in" type="submit" value="出勤" formaction="/attendance">
     @elseif($attendance->status_id===config('constants.STATUS_WORKING'))
     <input class="form__button--clock-out" type="submit" value="退勤" formaction="/attendance">
-    <input class="form__button--break" type="submit" value="休憩" formaction="/attendance/break">
+    <input class="form__button--break" type="submit" value="休憩入" formaction="/attendance/break">
     @elseif($attendance->status_id===config('constants.STATUS_BREAK'))
     <input class="form__button--break" type="submit" value="休憩戻" formaction="/attendance/break">
     @else
-    <p class="form__text--thanks">お疲れさまでした。<div class=""></div></p>
+    <p class="form__text--thanks">お疲れ様でした。<div class=""></div></p>
     @endif
   </div>
 </form>

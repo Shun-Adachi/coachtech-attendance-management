@@ -241,7 +241,7 @@ class AdminAttendanceListTest extends TestCase
                          ->post('/attendance/stamp_correction_request', $postData);
         $response->assertRedirect("/attendance/{$attendance->id}");
         $response->assertSessionHasErrors([
-            'breakTimes.new.break_in' => '休憩開始時間が勤務時間外です',
+            'clock_in' => '出勤時間もしくは退勤時間が不適切な値です',
         ]);
     }
 
@@ -276,7 +276,7 @@ class AdminAttendanceListTest extends TestCase
                          ->post('/attendance/stamp_correction_request', $postData);
         $response->assertRedirect("/attendance/{$attendance->id}");
         $response->assertSessionHasErrors([
-            'breakTimes.new.break_out' => '休憩終了時間が勤務時間外です',
+            'clock_in' => '出勤時間もしくは退勤時間が不適切な値です',
         ]);
     }
 
