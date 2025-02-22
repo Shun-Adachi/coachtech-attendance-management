@@ -31,6 +31,7 @@ class AttendanceBreakTest extends TestCase
     public function test_user_can_start_break_when_status_is_working()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $breakStatusId    = Status::where('name', '休憩中')->value('id');
@@ -68,6 +69,7 @@ class AttendanceBreakTest extends TestCase
     public function test_user_can_take_multiple_breaks_in_one_day()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
@@ -102,6 +104,7 @@ class AttendanceBreakTest extends TestCase
     public function test_user_can_return_from_break_to_working_status()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
@@ -144,6 +147,7 @@ class AttendanceBreakTest extends TestCase
     public function test_user_can_return_from_break_multiple_times()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();
@@ -184,6 +188,7 @@ class AttendanceBreakTest extends TestCase
     public function test_break_time_is_recorded_in_management_screen()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();

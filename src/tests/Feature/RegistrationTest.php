@@ -26,6 +26,7 @@ class RegistrationTest extends TestCase
      */
     public function test_registration_requires_name()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => '',
             'email'                 => 'user@example.com',
@@ -45,6 +46,7 @@ class RegistrationTest extends TestCase
      */
     public function test_registration_requires_email()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'テストユーザー',
             'email'                 => '',
@@ -64,6 +66,7 @@ class RegistrationTest extends TestCase
      */
     public function test_registration_requires_password_minimum_length()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'テストユーザー',
             'email'                 => 'user@example.com',
@@ -84,6 +87,7 @@ class RegistrationTest extends TestCase
      */
     public function test_registration_fails_when_password_confirmation_does_not_match()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'テストユーザー',
             'email'                 => 'user@example.com',
@@ -104,6 +108,7 @@ class RegistrationTest extends TestCase
      */
     public function test_registration_requires_password()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'  => 'テストユーザー',
             'email' => 'user@example.com',
@@ -121,6 +126,7 @@ class RegistrationTest extends TestCase
      */
     public function test_registration_saves_user_data()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'TestUser',
             'email'                 => 'testuser@example.com',
@@ -148,6 +154,7 @@ class RegistrationTest extends TestCase
      */
     public function test_admin_login_fails_when_details_do_not_match()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         User::create([
             'name'     => 'Admin User',
             'email'    => 'admin@example.com',

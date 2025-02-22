@@ -187,6 +187,7 @@ class AdminAttendanceListTest extends TestCase
     public function test_invalid_clock_times_in_admin_update_shows_validation_error()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $attendance = Attendance::where('user_id', $user->id)->first();
         $adminUser = User::where('role_id', config('constants.ROLE_ADMIN'))->first();
@@ -217,6 +218,7 @@ class AdminAttendanceListTest extends TestCase
     public function test_invalid_break_in_times_in_admin_update_shows_validation_error()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $attendance = Attendance::where('user_id', $user->id)->first();
         $adminUser = User::where('role_id', config('constants.ROLE_ADMIN'))->first();
@@ -252,6 +254,7 @@ class AdminAttendanceListTest extends TestCase
     public function test_invalid_break_out_times_in_admin_update_shows_validation_error()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $attendance = Attendance::where('user_id', $user->id)->first();
         $adminUser = User::where('role_id', config('constants.ROLE_ADMIN'))->first();
@@ -285,7 +288,9 @@ class AdminAttendanceListTest extends TestCase
      * 備考欄が未入力の場合、エラーメッセージが表示されることを検証するテスト
      */
     public function test_empty_note_field_shows_validation_error_for_admin()
-    {        // テストデータの準備
+    {
+        // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $attendance = Attendance::where('user_id', $user->id)->first();
         $adminUser = User::where('role_id', config('constants.ROLE_ADMIN'))->first();

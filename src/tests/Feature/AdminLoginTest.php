@@ -27,6 +27,7 @@ class AdminLoginTest extends TestCase
      */
     public function test_admin_login_requires_email()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         User::create([
             'name'     => 'Admin User',
             'email'    => 'admin@example.com',
@@ -52,6 +53,7 @@ class AdminLoginTest extends TestCase
      */
     public function test_admin_login_requires_password()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::create([
             'name'     => 'Admin User',
             'email'    => 'admin@example.com',

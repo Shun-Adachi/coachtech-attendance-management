@@ -172,6 +172,7 @@ class StampCorrectionRequestForAdminTest extends TestCase
     public function test_admin_approval_of_correction_request_updates_attendance_record()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $approvedStatus = config('constants.STATUS_APPROVED');
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();

@@ -25,6 +25,7 @@ class UserLoginTest extends TestCase
      */
     public function test_login_requires_email()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'TestUser',
             'email'                 => 'testuser@example.com',
@@ -52,6 +53,7 @@ class UserLoginTest extends TestCase
      */
     public function test_login_requires_password()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'TestUser',
             'email'                 => 'testuser@example.com',
@@ -79,6 +81,7 @@ class UserLoginTest extends TestCase
      */
     public function test_login_fails_when_registration_details_do_not_match()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $data = [
             'name'                  => 'TestUser',
             'email'                 => 'testuser@example.com',

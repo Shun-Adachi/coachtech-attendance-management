@@ -29,6 +29,7 @@ class AttendanceClockOutTest extends TestCase
     public function test_user_can_clock_out_when_status_is_working()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $leavingStatusId    = Status::where('name', '退勤済み')->value('id');
@@ -63,6 +64,7 @@ class AttendanceClockOutTest extends TestCase
     public function test_clock_out_is_recorded_in_management_screen()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $today = Carbon::today();

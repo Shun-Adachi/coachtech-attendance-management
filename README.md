@@ -1,11 +1,20 @@
-# coachtechフリマ
+# coachtech 勤怠管理
 
 ## 概要
 
-このプロジェクトは、個人や小規模事業者が商品を簡単に売買できるオンラインフリーマーケットアプリケーションです。以下の機能を提供します。
+本システムは、一般従業員と管理者向けに設計された勤怠管理アプリケーションです。効率的な勤怠記録と管理を実現するため、以下の機能を提供します。
 
-- **非会員ユーザー**: 商品リストの閲覧、商品の検索、商品詳細の閲覧
-- **会員ユーザー**: プロフィール編集、商品の出品、購入、コメント投稿、お気に入り機能
+- **一般ユーザー:**
+
+  - 勤怠打刻
+  - 勤怠詳細の確認および修正申請
+  - 申請履歴の確認
+
+- **管理者ユーザー:**
+  - 日次・月次の勤怠一覧の確認
+  - 勤怠詳細の修正
+  - スタッフ管理
+  - 修正申請の確認および承認
 
 ---
 
@@ -13,14 +22,15 @@
 
 - **OS**: Ubuntu 24.04.1 LTS
 - **環境構築**: Docker 27.3.1
-- **フレームワーク**: Laravel 8.x
-- **プログラミング言語**: PHP 7.4.9
+- **フレームワーク**: Laravel 11.x
+- **プログラミング言語**: PHP 8.2.0
 - **データベース**: MySQL 8.0.26
-- **Webサーバー**: Nginx 1.21.1
+- **Web サーバー**: Nginx 1.21.1
 - **バージョン管理**: Git
-- **決済サービス**: Stripe
+- **ログイン認証**: Fortify
 - **メール検証環境**: MailHog（ログイン認証メールの確認に使用）
-- **テスト環境**: PHPUnit
+- **テスト環境**: PHPUnit v10.0
+- **JavaScript テスト**: Laravel Dusk v8.3.0
 
 ---
 
@@ -29,82 +39,44 @@
 ### 1. リポジトリのクローン
 
 ```bash
-git clone git@github.com:Shun-Adachi/coachtech-free-market.git
+git clone git@github.com:Shun-Adachi/coachtech-attendance-management.git
 cd coachtech-free-market
 ```
 
-### 2. Dockerコンテナのビルドと起動
+### 2. Docker コンテナの起動と環境設定
 
 ```bash
-docker-compose up -d --build
+make init
 ```
 
-### 3. パッケージのインストールと環境設定
-
-```bash
-docker-compose exec php bash
-# コンテナ内で以下を実行
-composer install
-cp .env.example .env
-```
-
-`.env` ファイルを編集して以下の内容を設定してください。
-
-```env
-DB_HOST=mysql
-DB_DATABASE=laravel_db
-DB_USERNAME=laravel_user
-DB_PASSWORD=laravel_pass
-
-STRIPE_KEY=your_stripe_publishable_key # Stripeダッシュボードで確認した公開可能キーを設定
-STRIPE_SECRET=your_stripe_secret_key   # シークレットキーを設定
-```
-
-- **Stripeキーの取得手順**
-  1. Stripeアカウントを作成
-     Stripe公式サイトにアクセスし、新しいアカウントを登録します。
-  2. APIキーを取得
-     Stripeダッシュボードの「開発者」→「APIキー」から、公開可能キーとシークレットキーを取得します。
-
-
-### 4. 初期セットアップ
-
-```bash
-docker-compose exec php bash
-# コンテナ内で以下を実行
-php artisan key:generate
-php artisan migrate --seed
-php artisan storage:link
-```
-
----
-
-## URL一覧
+## URL 一覧
 
 ### 開発環境
 
-- 商品一覧画面: <http://localhost/>
 - 会員登録画面: <http://localhost/register>
-- ログイン画面: <http://localhost/login>
+- 一般ログイン画面: <http://localhost/login>
+- 勤怠登録画面(一般ユーザー): <http://localhost/attendance>
+- 管理者ログイン画面: <http://localhost/admin/login>
+- 勤怠一覧画面(管理者): <http://localhost/admin/attendance/list>
 - MailHog: <http://localhost:8025> （ログイン認証メール確認用）
 
 ---
 
 ## ダミーデータ一覧
 
- 詳細は[こちら](./dummy_data.md) を参照してください。
+詳細は[こちら](./dummy_data.md) を参照してください。
 
 ---
 
-## ER図
+## ER 図
 
-このプロジェクトのER図は以下の通りです。
+このプロジェクトの ER 図は以下の通りです。
 
 <img src="./diagram/ER/ER.png" alt="ER図" width="800">
 
 ---
 
-## PHPUnitを用いたテスト実行手順
+## PHPUnit を用いたテスト実行手順
 
 ### 1. テスト用データベースの作成
 
@@ -129,26 +101,65 @@ APP_KEY=
 DB_DATABASE=test
 ```
 
-### 3. テスト用のアプリケーションキーを生成する
+### 3. テストを実行する
 
 ```bash
-docker-compose exec php bash
-# phpコンテナ内で以下を実行
-php artisan key:generate --env=testing
-php artisan config:clear
-```
-
-### 4. テストを実行する
-
-```bash
-docker-compose exec php bash
-# phpコンテナ内で以下を実行
-php artisan test
+make phpunit
 ```
 
 正常にテストが完了すると、以下のように表示されます。
 
 ```bash
-Tests: 36 passed
-Time:  x.xxs
+OK (60 tests, 667 assertions)
+```
+
+## Laravel DUSK を用いた JavaScript テストの実行
+
+### 1. テスト用データベースの作成確認
+
+[PHPUnit のテスト実行時](#1-テスト用データベースの作成)に作成したテスト用データベース (test) が存在することを確認してください。
+存在しない場合は同様の手順で作成してください。
+
+### 2. `.env`ファイルの編集
+
+`.env` ファイルを以下の様に変更します。
+
+```env
+APP_ENV=testing
+DB_DATABASE=test
+```
+
+設定変更後、コンフィグキャッシュをクリアし、再生成して反映させます。
+
+```bash
+make:cache
+```
+
+### 3. DUSK テストを実行する
+
+以下のコマンドを実行して、テストを開始します。
+
+```bash
+make dusk
+```
+
+正常にテストが完了すると、以下のように表示されます。
+
+```bash
+Tests:    1 passed (2 assertions)
+```
+
+### 4. 開発環境への復元
+
+DUSK テスト実行後、元の開発環境に戻すために、.env ファイルの設定を以下の様に戻します。
+
+```env
+APP_ENV=local
+DB_DATABASE=laravel_db
+```
+
+変更後、再度キャッシュをクリアして設定を反映させます。
+
+```bash
+make:cache
 ```

@@ -30,6 +30,7 @@ class AttendanceClockInTest extends TestCase
      */
     public function test_user_can_clock_in_when_status_is_before_work()
     {
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $response = $this->actingAs($user)->get('/attendance');
         $response->assertStatus(200);
@@ -67,6 +68,7 @@ class AttendanceClockInTest extends TestCase
     public function test_clock_in_is_recorded_in_management_screen()
     {
         // テストの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId    = Status::where('name', '勤務中')->value('id');
         $response = $this->actingAs($user)->get('/attendance');

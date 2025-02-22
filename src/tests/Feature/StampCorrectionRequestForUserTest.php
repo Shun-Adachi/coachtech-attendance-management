@@ -30,6 +30,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_invalid_clock_times_show_validation_error()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
@@ -67,6 +68,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_invalid_break_in_times_show_validation_error()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
@@ -110,6 +112,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_invalid_break_out_times_show_validation_error()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
@@ -152,6 +155,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_note_field_validation_when_empty()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
@@ -195,6 +199,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_correction_request_is_submitted_and_visible_in_admin_views()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
@@ -255,6 +260,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_correction_request_is_submitted_and_visible_in_user_views()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
@@ -305,6 +311,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_correction_request_is_approval_in_user_view()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $workingStatusId = Status::where('name', '勤務中')->value('id');
         $approvedStatusId = Status::where('name', '承認済み')->value('id');
@@ -405,6 +412,7 @@ class StampCorrectionRequestForUserTest extends TestCase
     public function test_detail_button_navigates_to_correction_request_detail_page()
     {
         // テストデータの準備
+        $this->withoutMiddleware(\App\Http\Middleware\VerifyCsrfToken::class);
         $user = User::where('role_id', config('constants.ROLE_USER'))->first();
         $today = Carbon::today();
         $attendance = Attendance::create([
