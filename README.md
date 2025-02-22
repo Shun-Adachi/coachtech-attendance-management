@@ -90,7 +90,7 @@ sudo chmod 777 -R .
 
 ```bash
 docker-compose exec mysql bash
-# mysqlコンテナ内で以下を実行
+# mysqlコンテナ内で以下を実行(パスワードは"root")
 mysql -u root -p
 
 # MySQLクライアントで以下を実行
