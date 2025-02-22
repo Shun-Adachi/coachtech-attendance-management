@@ -169,5 +169,5 @@ DB_DATABASE=laravel_db
 変更後、再度キャッシュをクリアして設定を反映させます。
 
 ```bash
-make:cache
+make cache
 ```
