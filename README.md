@@ -15,10 +15,17 @@
   - 勤怠詳細の修正
   - スタッフ管理
   - 修正申請の確認および承認
-
-<img src="./diagram/index.png" alt="index" style="max-width: 48%; height: auto;"  >
-<img src="./diagram/attendance-list.png" alt="attendance-list" style="max-width: 48%; height: auto;">
-
+<div style="display: flex;
+            flex-wrap: nowrap;
+            gap: 8px;         /* 画像間の余白 */
+            align-items: center; /* 縦位置そろえ */
+            /* オプション：コンテナ幅いっぱいに広げたいとき */
+            width: 100%;
+            overflow: hidden; /* 万一はみ出してもスクロールせずに隠す */
+           ">
+  <img src="./diagram/index.png" alt="index" style="max-width: 50%; height: auto;"  >
+  <img src="./diagram/attendance-list.png" alt="attendance-list" style="max-width: 50%; height: auto;">
+</div>
 ---
 
 ## 使用技術（実行環境）
