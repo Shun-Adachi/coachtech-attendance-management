@@ -16,6 +16,9 @@
   - スタッフ管理
   - 修正申請の確認および承認
 
+<img src="./diagram/index.png" alt="index" style="max-width: 48%; height: auto;"  >
+<img src="./diagram/attendance-list.png" alt="attendance-list" style="max-width: 48%; height: auto;">
+
 ---
 
 ## 使用技術（実行環境）
